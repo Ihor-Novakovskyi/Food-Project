@@ -99,7 +99,7 @@
     document.body.style.overflow = 'hidden';
     clearInterval(modalTimerId);
   }
-
+  
   function closeModal() {
     modal.classList.remove('show');
     modal.classList.add('hide');
@@ -132,6 +132,129 @@
 
 })
 
+
+class MenuCard {
+  constructor (src, alt, name, textContent, price, exchange, parentSelector, ...classes) {
+    this.src = src;
+    this.alt = alt;
+    this.name = name;
+    this.textContent = textContent;
+    this.price = price;
+    this.exchange = exchange;
+    this.price = price;
+    this.classes = classes;
+    this.parent  = document.querySelector(parentSelector);
+    this.priceConvertToUA();
+    this.render();
+    
+    
+  }
+  
+  priceConvertToUA() {
+    this.price = this.price * this.exchange;
+  }
+
+  render() {
+    const element = document.createElement('div');
+    if (this.classes.length === 0 || !this.classes.includes('menu__item')) {
+      this.classes.push('menu__item');
+    } 
+    this.classes.forEach(className => element.classList.add(className))
+    element.innerHTML = `
+      <img src= ${this.src} alt=${this.alt}>
+      <h3 class="menu__item-subtitle">Меню ${this.name}</h3>
+      <div class="menu__item-descr">${this.textContent}</div>
+      <div class="menu__item-divider"></div>
+      <div class="menu__item-price">
+        <div class="menu__item-cost">Цена:</div>
+        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+      </div>
+      `;
+    this.parent.append(element)
+    }
+  }
+  const card1 = new MenuCard(
+    "img/tabs/vegy.jpg", 
+    "vegy",
+    'Фитнес',
+    `Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!
+    `,
+    8,
+    40,
+    ".menu .container",
+    'menu__item'
+
+  )
+  const card2 = new MenuCard(
+    "img/tabs/elite.jpg", 
+    "elite",
+    'Премиум',
+    `В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!
+    `,
+    14.5,
+    40,
+    ".menu .container",
+    "menu__item"
+  )
+
+  const card3 = new MenuCard(
+    "img/tabs/post.jpg", 
+    "post",
+    'Постное',
+    `Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.`,
+    15,
+    40,
+    ".menu .container",
+    'menu__item'
+  )
+ 
+  console.dir(MenuCard);
+
+// class MenuCard {
+//   constructor (imgLink, menuName,textMenu, price) {
+//     const container = document.querySelectorAll('.container')[4];
+//     this.menuItem = document.createElement('div');
+//     this.menuItem.classList.add('menu__item');
+//     container.append(this.menuItem);
+
+//     this.img  = document.createElement('img');
+//     this.img.src = imgLink;
+//     this.menuItem.append(this.img);
+
+//     this.nameMenu = document.createElement('h3');
+//     this.nameMenu.classList.add('menu__item-subtitle');
+//     this.menuItem.append(this.nameMenu);
+
+//     this.nameMenu.innerText = `Меню ${menuName}`;
+//     this.menuText = document.createElement('div');
+//     this.menuText.classList.add('menu__item-descr');
+//     this.menuText.textContent = `Меню "${menuName}" - ${textMenu}`;
+//     this.menuItem.append(this.menuText);
+
+//     this.menuDevider = document.createElement('div');
+//     this.menuDevider.classList.add('menu__item-divider');
+//     this.menuItem.append(this.menuDevider);
+
+//     this.menuPrice = document.createElement('div');
+//     this.menuPrice.classList.add('menu__item-price');
+//     this.menuItem.append(this.menuPrice);
+
+//     this.itemCost = document.createElement('div');
+//     this.itemCost.classList.add('menu__item-cost');
+//     this.itemCost.textContent = 'Цена';
+//     this.menuPrice.append(this.itemCost);
+
+//     this.totalPrice = document.createElement('div');
+//     this.totalPrice.classList.add('menu__item-total');
+//     this.totalPrice.innerHTML = `<span>${price}</span> грн/день`
+//     this.menuPrice.append(this.totalPrice);
+//   }
+// }
+
+
+
+// new MenuCard('img/tabs/elite.jpg', 'Фитнес',`Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!
+// `, 333)
 
 
 
