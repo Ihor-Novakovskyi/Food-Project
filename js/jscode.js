@@ -1,6 +1,6 @@
 
 'use strict'  
- console.log(document.documentElement)
+
  
   window.addEventListener('DOMContentLoaded', () => {
 
@@ -99,7 +99,7 @@
     document.body.style.overflow = 'hidden';
     clearInterval(modalTimerId);
   }
-  
+
   function closeModal() {
     modal.classList.remove('show');
     modal.classList.add('hide');
@@ -114,6 +114,7 @@
   })
 
   document.addEventListener('keydown', (e) => {
+    
     if (e.code === 'Escape' && modal.classList.contains('show')) {
       closeModal();
     }
@@ -130,49 +131,47 @@
 
   window.addEventListener('scroll', showModalByScroll);
 
-})
-
-
-class MenuCard {
-  constructor (src, alt, name, textContent, price, exchange, parentSelector, ...classes) {
-    this.src = src;
-    this.alt = alt;
-    this.name = name;
-    this.textContent = textContent;
-    this.price = price;
-    this.exchange = exchange;
-    this.price = price;
-    this.classes = classes;
-    this.parent  = document.querySelector(parentSelector);
-    this.priceConvertToUA();
-    this.render();
-    
-    
-  }
-  
-  priceConvertToUA() {
-    this.price = this.price * this.exchange;
-  }
-
-  render() {
-    const element = document.createElement('div');
-    if (this.classes.length === 0 || !this.classes.includes('menu__item')) {
-      this.classes.push('menu__item');
-    } 
-    this.classes.forEach(className => element.classList.add(className))
-    element.innerHTML = `
-      <img src= ${this.src} alt=${this.alt}>
-      <h3 class="menu__item-subtitle">Меню ${this.name}</h3>
-      <div class="menu__item-descr">${this.textContent}</div>
-      <div class="menu__item-divider"></div>
-      <div class="menu__item-price">
-        <div class="menu__item-cost">Цена:</div>
-        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-      </div>
-      `;
-    this.parent.append(element)
+  class MenuCard {
+    constructor (src, alt, name, textContent, price, exchange, parentSelector, ...classes) {
+      this.src = src;
+      this.alt = alt;
+      this.name = name;
+      this.textContent = textContent;
+      this.price = price;
+      this.exchange = exchange;
+      this.price = price;
+      this.classes = classes;
+      this.parent  = document.querySelector(parentSelector);
+      this.priceConvertToUA();
+      this.render();
+      
+      
     }
-  }
+    
+    priceConvertToUA() {
+      this.price = this.price * this.exchange;
+    }
+  
+    render() {
+      const element = document.createElement('div');
+      if (this.classes.length === 0 || !this.classes.includes('menu__item')) {
+        this.classes.push('menu__item');
+      } 
+      this.classes.forEach(className => element.classList.add(className))
+      element.innerHTML = `
+        <img src= ${this.src} alt=${this.alt}>
+        <h3 class="menu__item-subtitle">Меню ${this.name}</h3>
+        <div class="menu__item-descr">${this.textContent}</div>
+        <div class="menu__item-divider"></div>
+        <div class="menu__item-price">
+          <div class="menu__item-cost">Цена:</div>
+          <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+        </div>
+        `;
+      this.parent.append(element)
+      }
+    }
+  document.querySelector('.menu .container').style.alignItems = 'stretch';
   const card1 = new MenuCard(
     "img/tabs/vegy.jpg", 
     "vegy",
@@ -207,8 +206,43 @@ class MenuCard {
     ".menu .container",
     'menu__item'
   )
- 
-  console.dir(MenuCard);
+  const forms = document.querySelectorAll('form');
+  forms.forEach(postData);
+  function postData(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      
+      e.target.reset();
+      const request = new XMLHttpRequest();
+      request.open('POST', 'http://food-project/server.php');
+      request.send(formData);
+      const infoMessage = {
+        send: 'Оправка сообщения',
+        load: 'Мы свяжемся с вами',
+        error: 'Извините, техничсекие неполадки'
+      }
+      const infoLoad = document.createElement('div');
+      e.target.append(infoLoad);
+      infoLoad.textContent = infoMessage.send;
+      request.addEventListener('onload', () => {
+       if (request.status === 200) {
+        console.log(request.response)
+        infoLoad.textContent = infoMessage.load;
+        setTimeout(() => {
+          closeModal();
+          infoLoad.textContent = '';
+        }, 1000)
+       } else {
+        infoLoad.textContent = infoMessage.error;
+       }
+      })
+    })
+  }
+})
+
+
+
 
 // class MenuCard {
 //   constructor (imgLink, menuName,textMenu, price) {
