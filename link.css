@@ -1,0 +1,7 @@
+.header__links{display:flex;align-items:center}
+.header__link{
+   position:relative;
+   margin-right:45px;
+   font-weight:700;
+   font-size:30px;
+   color:#303030}

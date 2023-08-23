@@ -130,7 +130,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   class MenuCard {
     constructor(src, alt, name, textContent, price, exchange, parentSelector, ...classes) {
-
       this.src = src;
       this.alt = alt;
       this.name = name;
@@ -169,11 +168,18 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   document.querySelector('.menu .container').style.alignItems = 'stretch';
   const getResource = async (url) => {
-    const formObj = await fetch(url);
-    if (!formObj.ok) {
+    try {
+      const formObj = await fetch(url);
+      if (!formObj.ok) {
+        console.log('error')
       throw new Error(`Could not fetch ${url}, status ${formObj.status}`);
-    }
+      }
     return formObj.json();
+      } catch (error) {
+      console.log('error inside', error)
+      // await error
+    }
+    
   };
 
   getResource('http://localhost:3000/menu')
@@ -278,6 +284,7 @@ window.addEventListener('DOMContentLoaded', () => {
   slidesField.style.display = 'flex';
   slidesField.style.transition = '0.5s all'
   slidesWrapper.style.overflow = 'hidden';
+  currenSlide.textContent = `0${numberSlide}`;
 
   if (sliderImgs.length < 10) totalSlide.textContent = `0${sliderImgs.length}`;
   else totalSlide.textContent = sliderImgs.length;
@@ -287,31 +294,161 @@ window.addEventListener('DOMContentLoaded', () => {
       positionSlide = 0;
       numberSlide = 1;
     } else {
+      positionSlide = -1 * (numberSlide) * +slideWidth.match(/\d/g).join('');
       numberSlide++;
-      positionSlide -= +slideWidth.slice(0, slideWidth.length - 2);
     }
     slidesField.style.transform = `translateX(${positionSlide}px)`;
     if (numberSlide < 10) currenSlide.textContent = `0${numberSlide}`
     else currenSlide.textContent = numberSlide;
-
+    showSlidesIndicate();
   })
 
 
   prevSlideButton.addEventListener('click', () => {
     if (numberSlide === 1) {
-      positionSlide = -1 * (sliderImgs.length - 1) * +slideWidth.slice(0, slideWidth.length - 2);
+      positionSlide = -1 * (sliderImgs.length - 1) * +slideWidth.match(/\d/g).join('');
       numberSlide = sliderImgs.length;
     } else {
       numberSlide--;
-      positionSlide += +slideWidth.slice(0, slideWidth.length - 2);
+      positionSlide += +slideWidth.match(/\d/g).join('');
     }
     slidesField.style.transform = `translateX(${positionSlide}px)`;
     if (numberSlide < 10) currenSlide.textContent = `0${numberSlide}`
     else currenSlide.textContent = numberSlide;
+    showSlidesIndicate();
   })
 
+  //slider indicator
+
+  const slideBox = document.createElement('div');
+  slideBox.classList.add('carousel-indicators');
+  document.querySelector('.offer__slider').insertAdjacentElement('afterbegin', slideBox);
+  document.querySelector('.offer__slider').style.position = 'relative';
+  sliderImgs.forEach(() => {
+    const slideIndicator = document.createElement('div');
+
+    slideIndicator.classList.add('dot');
+    slideIndicator.addEventListener('click', (e) => {
+      slideBox.querySelectorAll('.dot').forEach((ind, index) => {
+        if (e.target === ind) {
+          positionSlide = -1 * index * +slideWidth.match(/\d/g).join('');
+          numberSlide = index + 1;
+          slidesField.style.transform = `translateX(${positionSlide}px)`;
+          if (numberSlide < 10) currenSlide.textContent = `0${numberSlide}`
+          else currenSlide.textContent = numberSlide;
+          showSlidesIndicate()
+        }
+      })
+    })
+    slideBox.append(slideIndicator)
+  })
+
+
+  function showSlidesIndicate() {
+    for (let ind of slideBox.querySelectorAll('.dot')) {
+      ind.style.backgroundColor = 'white';
+    }
+    slideBox.querySelectorAll('.dot')[numberSlide - 1].style.backgroundColor = '#54ed39';
+  }
+  showSlidesIndicate();
+  //menu calc
+  const result = document.querySelector('.calculating__result span');
+  let sex, height, weight, age, ratio;
+  if (localStorage.getItem('sex')) { 
+    sex = localStorage.getItem('sex')
+  } else {
+    sex = 'female';
+    localStorage.setItem('sex', sex)
+  }
+ 
+  if (localStorage.getItem('data-ratio')) {
+    sex = localStorage.getItem('data-ratio')
+  } else {
+    ratio = 1.375
+    localStorage.setItem('ratio', ratio)
+  }
+
+  calcTotal();
+
+  function calcTotal() {
+    if (!sex || !height || !weight || !age || !ratio) {
+      result.textContent = '______';
+      return;
+    }
+    if (sex === 'female') {
+      result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+    } else {
+      result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+    }
+  }
+
+  function getSexAndActivity(selector, classActivity) {
+    const wrapperPropse = document.querySelector(`${selector}`);
+    wrapperPropse.addEventListener('click', (e) => {
+      if (e.target !== wrapperPropse) {
+        wrapperPropse.querySelectorAll(`.${classActivity}`)
+          .forEach(element => element.classList.remove(`${classActivity}`));
+        e.target.classList.add(classActivity);
+      }
+      if (e.target.getAttribute('data-sex')) {
+        sex = e.target.getAttribute('data-sex');
+        localStorage.setItem('sex', sex)
+      } else {
+        ratio = +e.target.getAttribute('data-ratio');
+        localStorage.setItem('ratio', ratio)
+      }
+      calcTotal()
+    })
+  }
+  getSexAndActivity('.calculating__choose', 'calculating__choose-item_active');
+  getSexAndActivity('.calculating__choose_big', 'calculating__choose-item_active');
+
+  function getPersonalValue(selector) {
+    const inputs = document.querySelectorAll(selector);
+    
+    inputs.forEach(element => {
+      element.addEventListener('input', (e) => {
+        if (e.target.value.match(/\D/g)) {
+          e.target.style.border = '1px solid red';
+        } else {
+          e.target.style.border = '';
+        }
+
+        switch (e.target.id) {
+          case 'weight': {
+            weight = e.target.value
+            break;
+          }
+          case 'height': {
+            height = e.target.value;
+            break;
+          }
+          case 'age': {
+            age = e.target.value;
+            break;
+          }
+        }
+        calcTotal();
+      })
+    })
+  }
+
+  getPersonalValue('.calculating__choose_medium');
+
+
+
+  //  let obj = {
+  //   name: 'Igor',
+  //   secondName: 'Novakovskiy',
+  //   age: 31,
+  //   'wife': 'Mila',
+  //  }
+  //  obj.name = 'Igor' // сдесь он будет рассматривать name как строковую запись для создания свойства
+  //  obj['wife'] //это он будет рассматривать как строковое значение и по немуу создавать свойство
+  //именнованная область памяти является,некой строкой которая именует адрес области памяти
+
   //another realisation slider
-  
+
   // changeSliderImgs(numberSlide);
   // countingSlider();
 
@@ -351,16 +488,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
   // clock realiztaion
 //   function clockBlock(days,hours,minutes,seconds) {
 //     let dayIndicate = document.querySelector(days),
@@ -384,3 +511,5 @@ window.addEventListener('DOMContentLoaded', () => {
 //   clock();
 // }
 // clockBlock('#days', '#hours', '#minutes', '#seconds')
+
+
