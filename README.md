@@ -1,4 +1,4 @@
-This project was created using native JavaScript code, the fetch function, browser APIs, and the Webpack builder. Through this code, I gained a deep understanding 
+This project was created using native JavaScript code, the fetch function, browser APIs,localStorage APIs and the Webpack builder. Through this code, I gained a deep understanding 
 of the power of JavaScript when working within the V8 engine and how it can be utilized within a browser environment. It has also allowed me to better comprehend 
 the React library and how JavaScript can be employed to interact with the DOM API.
 To test the project yourself, follow these steps:
