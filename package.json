@@ -19,9 +19,10 @@
   "homepage": "https://github.com/Ihor-Novakovskyi/Food_Project#readme",
   "devDependencies": {
     "json-server": "^0.17.1",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.1",
+    "webpack": "^5.75.0"
   },
   "dependencies": {
-    "webpack": "^5.75.0"
+    "json-server": "^0.17.1",
   }
 }
