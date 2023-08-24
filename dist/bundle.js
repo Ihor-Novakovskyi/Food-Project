@@ -160,10 +160,9 @@ function getCards() {
   (0,_services_services__WEBPACK_IMPORTED_MODULE_0__.getResource)('http://localhost:3000/menu')
     .then((response) => {
       response.forEach(({ img, altimg, title, descr, price }) => {
-        console.log(descr)
         new MenuCard(img, altimg, title, descr, price, 40, '.menu .container')
       })
-    }).catch(data => console.log('its catch data -----', data))
+    }).catch(data => console.error('its catch data -----', data))
 
 }
 
@@ -214,7 +213,7 @@ function sendForm(modalSelector) {
             const objRequest = JSON.stringify(Object.fromEntries(formData.entries()));
 
             (0,_services_services__WEBPACK_IMPORTED_MODULE_1__.sendingData)('http://localhost:3000/requests', objRequest)
-                .then((data) => {
+                .then(() => {
                     statusMessage.remove();
                     showthanksModal(message.success, modalSelector);
                 })
