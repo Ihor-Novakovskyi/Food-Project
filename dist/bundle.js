@@ -157,7 +157,7 @@ function getCards() {
   document.querySelector('.menu .container').style.alignItems = 'stretch';
 
 
-  (0,_services_services__WEBPACK_IMPORTED_MODULE_0__.getResource)('http://ihor-novakovskyi.github.io/Food-Project/db.json')
+  (0,_services_services__WEBPACK_IMPORTED_MODULE_0__.getResource)('http://ihor-novakovskyi.github.io/Food-Project/db')
     .then(({menu}) => {
       response.forEach(({ img, altimg, title, descr, price }) => {
         console.log(descr)
