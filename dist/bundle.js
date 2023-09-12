@@ -200,6 +200,7 @@ function sendForm(modalSelector) {
     function postData(form, modalSelector) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+
             const statusMessage = document.createElement('img');
             statusMessage.src = message.loading;
             statusMessage.style.cssText = `
