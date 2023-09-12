@@ -159,7 +159,7 @@ function getCards() {
 
   (0,_services_services__WEBPACK_IMPORTED_MODULE_0__.getResource)('https://ihor-novakovskyi.github.io/Food-Project/db.json')
     .then(({menu}) => {
-      response.forEach(({ img, altimg, title, descr, price }) => {
+      menu.forEach(({ img, altimg, title, descr, price }) => {
         console.log(descr)
         new MenuCard(img, altimg, title, descr, price, 40, '.menu .container')
       })
