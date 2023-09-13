@@ -148,7 +148,7 @@ function getCards() {
         <div class="menu__item-divider"></div>
         <div class="menu__item-price">
           <div class="menu__item-cost">Price:</div>
-          <div class="menu__item-total"><span>${this.price}</span> UAH/day</div>
+          <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
         </div>
         `;
       this.parent.append(element)
@@ -160,7 +160,6 @@ function getCards() {
   (0,_services_services__WEBPACK_IMPORTED_MODULE_0__.getResource)('https://ihor-novakovskyi.github.io/Food-Project/db.json')
     .then(({menu}) => {
       menu.forEach(({ img, altimg, title, descr, price }) => {
-        console.log(descr)
         new MenuCard(img, altimg, title, descr, price, 40, '.menu .container')
       })
     }).catch(data => console.log('its catch data -----', data))
