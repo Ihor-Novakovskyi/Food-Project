@@ -145,7 +145,6 @@ function getCards() {
         <img src= ${this.src} alt=${this.alt}>
         <h3 class="menu__item-subtitle">Меню ${this.name}</h3>
         <div class="menu__item-descr">${this.textContent}</div>
-        <div class="menu__item-divider"></div>
         <div class="menu__item-price">
           <div class="menu__item-cost">Price:</div>
           <div class="menu__item-total"><span>${this.price}</span> UAH/day</div>
